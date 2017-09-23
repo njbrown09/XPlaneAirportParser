@@ -18,6 +18,6 @@ public void HandleAirport(Airport airport)
 
 ```
 
-##Notes
+## Notes
 1. This dosent process helipads, but that should be really easy to add (Im lazy and have no use for it)
 2. Some latituse/longitude data may be very slightly off. Xplane does not provide airport lat lon data for all airports, so if it cant find it, it uses one of the airports runways as the lat and lon
