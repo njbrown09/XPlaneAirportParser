@@ -124,8 +124,7 @@ namespace XplaneAirportParser
 		/// <param name="airport">Parsed Airport</param>
 		public void HandleAirport(Airport airport)
 		{
-			Console.WriteLine("Airport Processed!");
-			//Console.WriteLine(airport.ToString() + "	" + aptIndex);
+			Console.WriteLine(airport.ToString());
 		}
 	}
 }
