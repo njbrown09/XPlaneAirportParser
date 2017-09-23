@@ -1,6 +1,8 @@
 # XPlaneAirportParser
 What is this? Its an X-Plane 11 apt.dat parser.
 
+![Alt Text](https://i.gyazo.com/206b57206e26b18d15f460918a681d53.mp4)
+
 ## Instructions
 1. Compile
 2. Put your apt.dat file next to the binary. (apt.dat should be in ```X-Plane 11\Resources\default scenery\default apt dat\Earth nav data\apt.dat```)
