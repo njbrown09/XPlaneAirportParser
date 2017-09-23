@@ -4,8 +4,24 @@ using System.Text;
 
 namespace XplaneAirportParser.Data
 {
-	struct Airport
+	class Airport
 	{
+		public enum SurfaceTypes
+		{
+			Asphalt = 1,
+			Concrete = 2,
+			Grass = 3,
+			Dirt = 4,
+			Gravel = 5,
+			DryLakebed = 12,
+			Water = 13,
+			SnowOrIce = 14,
+			Other = 15,
+			Undefined = 999
+		}
+
+
+
 		public string ICAO;
 
 		public string country;
@@ -20,6 +36,8 @@ namespace XplaneAirportParser.Data
 
 		public float runwayLength;
 
+		public SurfaceTypes surfaceType = SurfaceTypes.Undefined;
+
 		public bool hasProperLatLon;
 
 
@@ -29,36 +47,36 @@ namespace XplaneAirportParser.Data
 		/// <returns>True if the airport has completed being parsed</returns>
 		public bool isFilled()
 		{
-			bool isFilled = true;
-
 			if (ICAO == null)
-				isFilled = false;
+				return false;
 
 			if (AirportName == null)
-				isFilled = false;
+				return false;
 
-			if (latitude == null)
-				isFilled = false;
+			if (latitude == float.NaN)
+				return false;
 
-			if (longitude == null)
-				isFilled = false;
+			if (longitude == float.NaN)
+				return false;
 
-			if (runwayLength == null)
-				isFilled = false;
+			if (runwayLength == float.NaN)
+				return false;
 
 			if (country == null)
-				isFilled = false;
+				return false;
 
 			if (city == null)
-				isFilled = false;
+				return false;
 
+			if (surfaceType == SurfaceTypes.Undefined)
+				return false;
 
-			return isFilled;
+			return true;
 		}
 
-		public string ToString()
+		public override string ToString()
 		{
-			return "ICAO: " + ICAO + " Name: " + AirportName + " City: " + city + " Country: " + country + " Lat: " + latitude + " Lon: " + longitude + " Length: " + runwayLength;
+			return "ICAO: " + ICAO + " Name: " + AirportName + " City: " + city + " Country: " + country + " Lat: " + latitude + " Lon: " + longitude + " Length: " + runwayLength + "	Type: " + surfaceType;
 		}
 	}
 }

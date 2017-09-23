@@ -62,6 +62,11 @@ namespace XplaneAirportParser
 						CurrentAiport.latitude = float.Parse(segments[9]);
 						CurrentAiport.longitude = float.Parse(segments[10]);
 					}
+
+					if (int.Parse(segments[2]) < (int)CurrentAiport.surfaceType)
+					{
+						CurrentAiport.surfaceType = (Airport.SurfaceTypes)int.Parse(segments[2]);
+					}
 					var coord1 = new GeoCoordinate(double.Parse(segments[9]), double.Parse(segments[10]));
 					var coord2 = new GeoCoordinate(double.Parse(segments[18]), double.Parse(segments[19]));
 
@@ -123,7 +128,7 @@ namespace XplaneAirportParser
 		/// <param name="airport">Parsed Airport</param>
 		public void HandleAirport(Airport airport)
 		{
-			Console.WriteLine(airport.ToString());
+			Console.WriteLine(airport);
 		}
 	}
 }
