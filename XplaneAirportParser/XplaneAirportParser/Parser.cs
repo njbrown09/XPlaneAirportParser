@@ -12,8 +12,11 @@ namespace XplaneAirportParser
 
 		public const string METADATA_PREFIX = "1302";
 
-		int aptIndex = 0;
+		public const string RUNWAY_PREFIX = "100";
 
+		/// <summary>
+		/// Starts the parsing, dont call manually
+		/// </summary>
 		public void StartParsing()
 		{
 			string[] Lines = System.IO.File.ReadAllLines("apt.dat");
@@ -22,7 +25,6 @@ namespace XplaneAirportParser
 
 			foreach (string line in Lines)
 			{
-				int dataIndex = 0;
 
 				if (string.IsNullOrWhiteSpace(line)) continue; //If empty, skip
 
@@ -52,7 +54,7 @@ namespace XplaneAirportParser
 						}
 					}
 				}
-				else if (segments[0] == "100")
+				else if (segments[0] == RUNWAY_PREFIX)
 				{
 					//9, 10
 					if (!CurrentAiport.hasProperLatLon)
@@ -64,7 +66,7 @@ namespace XplaneAirportParser
 					var coord2 = new GeoCoordinate(double.Parse(segments[18]), double.Parse(segments[19]));
 
 
-					CurrentAiport.runwayLength = ((float)coord1.GetDistanceTo(coord2) * 3.28084f);
+					CurrentAiport.runwayLength = ((float)coord1.GetDistanceTo(coord2) * 3.28084f); //3.28084f is the meters to feet conversion!
 				}
 				else if (segments[0] == METADATA_PREFIX)
 				{
@@ -112,37 +114,18 @@ namespace XplaneAirportParser
 						catch { }
 					}
 				}
-
-						/* Commented because it for some reason not all airports have lat lon set? Now we are using runway lat lon as lat and lon
-						 * 
-						else if (segments[0] == METADATA_PREFIX) //If the prefix is metadata (Like lat and lon!)
-						{
-							if (segments[1] == "datum_lat")
-							{
-								try
-								{
-									CurrentAiport.latitude = float.Parse(segments[2]);
-								} catch{ }
-							}
-							else if (segments[1] == "datum_lon")
-							{
-								try
-								{
-									CurrentAiport.longitude = float.Parse(segments[2]);
-								} catch { }
-							}
-						}
-						*/
-					}
+			}
 			while (true) { }
-
 		}
 
-
+		/// <summary>
+		/// Gets called whenever an airport is parsed, but your stuff you want to use the airport stuff with (Like a db insert Query!)
+		/// </summary>
+		/// <param name="airport">Parsed Airport</param>
 		public void HandleAirport(Airport airport)
 		{
-			aptIndex++;
-			Console.WriteLine(airport.ToString() + "	" + aptIndex);
+			Console.WriteLine("Airport Processed!");
+			//Console.WriteLine(airport.ToString() + "	" + aptIndex);
 		}
 	}
 }

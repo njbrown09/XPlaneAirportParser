@@ -26,7 +26,7 @@ namespace XplaneAirportParser.Data
 		/// <summary>
 		/// Is the airport data filled (is it done and ready for processing?)
 		/// </summary>
-		/// <returns>True if you should process this data</returns>
+		/// <returns>True if the airport has completed being parsed</returns>
 		public bool isFilled()
 		{
 			bool isFilled = true;
