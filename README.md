@@ -22,3 +22,4 @@ public void HandleAirport(Airport airport)
 1. This dosent process helipads, but that should be really easy to add (Im lazy and have no use for it)
 2. Some latituse/longitude data may be very slightly off. Xplane does not provide airport lat lon data for all airports, so if it cant find it, it uses one of the airports runways as the lat and lon
 3. You should get around 20263 airports parsed.
+3. This runs significantly slower in visual studio. If you want it to parse in around 3 seconds, run the exe by itself

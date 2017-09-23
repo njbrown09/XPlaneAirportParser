@@ -115,7 +115,6 @@ namespace XplaneAirportParser
 					}
 				}
 			}
-			while (true) { }
 		}
 
 		/// <summary>
