@@ -40,3 +40,9 @@ sysinfo.txt
 *.apk
 *.unitypackage
 Traitor Project/.vs/Traitor Project/v15/Browse.VC.db
+
+apt.dat
+packages/
+XplaneAirportParser/bin/
+*.exe
+XplaneAirportParser/XplaneAirportParser/bin/*
