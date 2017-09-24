@@ -36,6 +36,8 @@ namespace XplaneAirportParser.Data
 
 		public float runwayLength;
 
+		public int elevation;
+
 		public SurfaceTypes surfaceType = SurfaceTypes.Undefined;
 
 		public bool hasProperLatLon;
@@ -71,12 +73,16 @@ namespace XplaneAirportParser.Data
 			if (surfaceType == SurfaceTypes.Undefined)
 				return false;
 
+			if (elevation == null)
+				return false;
+
+
 			return true;
 		}
 
 		public override string ToString()
 		{
-			return "ICAO: " + ICAO + " Name: " + AirportName + " City: " + city + " Country: " + country + " Lat: " + latitude + " Lon: " + longitude + " Length: " + runwayLength + "	Type: " + surfaceType;
+			return "ICAO: " + ICAO + " Name: " + AirportName + " City: " + city + " Country: " + country + " Lat: " + latitude + " Lon: " + longitude + " Length: " + runwayLength + "	Elv: " + elevation + " Type: " + surfaceType;
 		}
 	}
 }

@@ -40,6 +40,7 @@ namespace XplaneAirportParser
 					}
 					CurrentAiport = new Airport(); //Create a new airport
 					CurrentAiport.ICAO = segments[4]; //Set the airports ICAO
+					CurrentAiport.elevation = int.Parse(segments[1]);
 
 					//Processes the name of the airport
 					for (int i = 0; i < segments.Length; i++)
