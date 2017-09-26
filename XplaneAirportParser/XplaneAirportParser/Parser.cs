@@ -14,6 +14,8 @@ namespace XplaneAirportParser
 
 		public const string RUNWAY_PREFIX = "100";
 
+		public const string VIEWPORT_PREFIX = "14";
+
 		/// <summary>
 		/// Starts the parsing, dont call manually
 		/// </summary>
@@ -74,27 +76,14 @@ namespace XplaneAirportParser
 
 					CurrentAiport.runwayLength = ((float)coord1.GetDistanceTo(coord2) * 3.28084f); //3.28084f is the meters to feet conversion!
 				}
+				else if (segments[0] == VIEWPORT_PREFIX)
+				{
+					CurrentAiport.latitude = float.Parse(segments[1]);
+					CurrentAiport.longitude = float.Parse(segments[2]);
+					CurrentAiport.hasProperLatLon = true;
+				}
 				else if (segments[0] == METADATA_PREFIX)
 				{
-					if (segments[1] == "datum_lat")
-					{
-						try
-						{
-							CurrentAiport.latitude = float.Parse(segments[2]);
-							CurrentAiport.hasProperLatLon = true;
-						}
-						catch { CurrentAiport.hasProperLatLon = false; }
-					}
-					else if (segments[1] == "datum_lon")
-					{
-						try
-						{
-							CurrentAiport.longitude = float.Parse(segments[2]);
-							CurrentAiport.hasProperLatLon = true;
-						}
-						catch { CurrentAiport.hasProperLatLon = false; }
-					}
-
 					if (segments[1] == "city")
 					{
 						try
