@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Device.Location;
 using System.Collections.Generic;
 using System.Text;
 using XplaneAirportParser.Data;
+using System.Device.Location;
 
 namespace XplaneAirportParser
 {
