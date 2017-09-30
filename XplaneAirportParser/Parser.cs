@@ -65,17 +65,16 @@ namespace XplaneAirportParser
 						CurrentAiport.latitude = float.Parse(segments[9]);
 						CurrentAiport.longitude = float.Parse(segments[10]);
 					}
-
-					if (int.Parse(segments[2]) < (int)CurrentAiport.surfaceType)
-					{
-						CurrentAiport.surfaceType = (Airport.SurfaceTypes)int.Parse(segments[2]);
-					}
 					var coord1 = new GeoCoordinate(double.Parse(segments[9]), double.Parse(segments[10]));
 					var coord2 = new GeoCoordinate(double.Parse(segments[18]), double.Parse(segments[19]));
 
+					float runwayLength = ((float)coord1.GetDistanceTo(coord2) * 3.28084f); //3.28084f is the meters to feet conversion!
 
-					CurrentAiport.runwayLength = ((float)coord1.GetDistanceTo(coord2) * 3.28084f); //3.28084f is the meters to feet conversion!
-				}
+                    //Add runway to airport runways
+                    CurrentAiport.runways.Add(new Runway(float.Parse(segments[9]), float.Parse(segments[10]), float.Parse(segments[18]), float.Parse(segments[19]), runwayLength, "NYI", (Runway.SurfaceTypes)int.Parse(segments[2])));
+
+
+                }
 				else if (segments[0] == VIEWPORT_PREFIX)
 				{
 					CurrentAiport.latitude = float.Parse(segments[1]);
@@ -119,6 +118,8 @@ namespace XplaneAirportParser
 		public void HandleAirport(Airport airport)
 		{
 			Console.WriteLine(airport);
+            foreach (Runway runway in airport.runways)
+                Console.WriteLine(runway);
 		}
 	}
 }

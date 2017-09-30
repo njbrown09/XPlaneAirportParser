@@ -6,22 +6,7 @@ namespace XplaneAirportParser.Data
 {
 	class Airport
 	{
-		public enum SurfaceTypes
-		{
-			Asphalt = 1,
-			Concrete = 2,
-			Grass = 3,
-			Dirt = 4,
-			Gravel = 5,
-			DryLakebed = 12,
-			Water = 13,
-			SnowOrIce = 14,
-			Other = 15,
-			Undefined = 999
-		}
-
-
-
+		
 		public string ICAO;
 
 		public string country;
@@ -38,10 +23,9 @@ namespace XplaneAirportParser.Data
 
 		public int elevation;
 
-		public SurfaceTypes surfaceType = SurfaceTypes.Undefined;
-
 		public bool hasProperLatLon;
 
+        public List<Runway> runways = new List<Runway>();
 
 		/// <summary>
 		/// Is the airport data filled (is it done and ready for processing?)
@@ -70,9 +54,6 @@ namespace XplaneAirportParser.Data
 			if (city == null)
 				return false;
 
-			if (surfaceType == SurfaceTypes.Undefined)
-				return false;
-
 			if (elevation == null)
 				return false;
 
@@ -82,7 +63,7 @@ namespace XplaneAirportParser.Data
 
 		public override string ToString()
 		{
-			return "ICAO: " + ICAO + " Name: " + AirportName + " City: " + city + " Country: " + country + " Lat: " + latitude + " Lon: " + longitude + " Length: " + runwayLength + "	Elv: " + elevation + " Type: " + surfaceType;
+			return "ICAO: " + ICAO + " Name: " + AirportName + " City: " + city + " Country: " + country + " Lat: " + latitude + " Lon: " + longitude + "	Elv: " + elevation;
 		}
 	}
 }
