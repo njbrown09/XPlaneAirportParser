@@ -6,7 +6,7 @@ using System.Device.Location;
 
 namespace XplaneAirportParser
 {
-	class Parser
+	public class Parser
 	{
 		public const string AIRPORT_PREFIX = "1";
 
@@ -58,12 +58,7 @@ namespace XplaneAirportParser
                         break;
 
                     case RUNWAY_PREFIX:
-                        //9, 10
-                        if (!CurrentAiport.hasProperLatLon)
-                        {
-                            CurrentAiport.latitude = float.Parse(segments[9]);
-                            CurrentAiport.longitude = float.Parse(segments[10]);
-                        }
+                        //Get coords of start and end of runway
                         var coord1 = new GeoCoordinate(double.Parse(segments[9]), double.Parse(segments[10]));
                         var coord2 = new GeoCoordinate(double.Parse(segments[18]), double.Parse(segments[19]));
 
@@ -71,43 +66,95 @@ namespace XplaneAirportParser
 
                         //Add runway to airport runways
                         CurrentAiport.runways.Add(new Runway(float.Parse(segments[9]), float.Parse(segments[10]), float.Parse(segments[18]), float.Parse(segments[19]), runwayLength, "NYI", (Runway.SurfaceTypes)int.Parse(segments[2])));
+
+                        //9, 10
+                        if (!CurrentAiport.hasProperLatLon)
+                        {
+                            Runway LongestRunway = new Runway(0, 0, 0, 0, 0, null, Runway.SurfaceTypes.Undefined);
+                            foreach (Runway rwy in CurrentAiport.runways)
+                            {
+                                if (rwy.length > LongestRunway.length)
+                                {
+                                    LongestRunway = rwy;
+                                }
+                            }
+                            CurrentAiport.latitude = (LongestRunway.startLat + LongestRunway.endLat) / 2f;
+                            CurrentAiport.longitude = (LongestRunway.startLon + LongestRunway.endLon) / 2f;
+                            CurrentAiport.hasProperLatLon = true;
+                        }
                         break;
 
                     case VIEWPORT_PREFIX:
-                        CurrentAiport.latitude = float.Parse(segments[1]);
-                        CurrentAiport.longitude = float.Parse(segments[2]);
-                        CurrentAiport.hasProperLatLon = true;
+                        if (!CurrentAiport.hasProperLatLon)
+                        {
+                            CurrentAiport.latitude = float.Parse(segments[1]);
+                            CurrentAiport.longitude = float.Parse(segments[2]);
+                            CurrentAiport.hasProperLatLon = true;
+                        }
                         break;
 
                     case METADATA_PREFIX:
-                        if (segments[1] == "city")
+                        switch (segments[1])
                         {
-                            try
-                            {
-                                CurrentAiport.city = segments[2];
-                                for (int i = 3; i < segments.Length; i++)
+                            case "city":
+                                try
                                 {
-                                    CurrentAiport.city += " " + segments[i];
+                                    CurrentAiport.city = segments[2];
+                                    for (int i = 3; i < segments.Length; i++)
+                                    {
+                                        CurrentAiport.city += " " + segments[i];
+                                    }
                                 }
-                            }
-                            catch { }
-                        }
-                        if (segments[1] == "country")
-                        {
-                            try
-                            {
-                                CurrentAiport.country = segments[2];
-                                for (int i = 3; i < segments.Length; i++)
+                                catch { }
+                                break;
+
+                            case "state":
+                                try
                                 {
-                                    CurrentAiport.country += " " + segments[i];
+                                    CurrentAiport.state = segments[2];
+                                    for (int i = 3; i < segments.Length; i++)
+                                    {
+                                        CurrentAiport.state += " " + segments[i];
+                                    }
                                 }
-                            }
-                            catch { }
+                                catch { }
+                                break;
+
+                            case "country":
+                                try
+                                {
+                                    CurrentAiport.country = segments[2];
+                                    for (int i = 3; i < segments.Length; i++)
+                                    {
+                                        CurrentAiport.country += " " + segments[i];
+                                    }
+                                }
+                                catch { }
+                                break;
+
+                            case "datum_lat":
+                                try
+                                {
+                                    CurrentAiport.latitude = float.Parse(segments[2]);
+                                    CurrentAiport.hasProperLatLon = true;
+                                }
+                                catch { }
+                                break;
+
+                            case "datum_lon":
+                                try
+                                {
+                                    CurrentAiport.longitude = float.Parse(segments[2]);
+                                    CurrentAiport.hasProperLatLon = true;
+                                }
+                                catch { }
+                                break;
                         }
                         break;
                 }
-			}
-		}
+            }
+            while (true) { }
+        }
 
 		/// <summary>
 		/// Gets called whenever an airport is parsed, but your stuff you want to use the airport stuff with (Like a db insert Query!)

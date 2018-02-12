@@ -4,12 +4,14 @@ using System.Text;
 
 namespace XplaneAirportParser.Data
 {
-	class Airport
+	public class Airport
 	{
 		
 		public string ICAO;
 
 		public string country;
+
+        public string state;
 
 		public string city;
 
@@ -18,8 +20,6 @@ namespace XplaneAirportParser.Data
 		public float latitude;
 
 		public float longitude;
-
-		public float runwayLength;
 
 		public int elevation;
 
@@ -45,9 +45,6 @@ namespace XplaneAirportParser.Data
 			if (longitude == float.NaN)
 				return false;
 
-			if (runwayLength == float.NaN)
-				return false;
-
 			if (country == null)
 				return false;
 
@@ -63,7 +60,7 @@ namespace XplaneAirportParser.Data
 
 		public override string ToString()
 		{
-			return "ICAO: " + ICAO + " Name: " + AirportName + " City: " + city + " Country: " + country + " Lat: " + latitude + " Lon: " + longitude + "	Elv: " + elevation;
+			return "ICAO: " + ICAO + " | Name: " + AirportName + " | City: " + city + " | State: " + state + " | Country: " + country + " | Lat: " + latitude + " | Lon: " + longitude + "   | Elv: " + elevation;
 		}
 	}
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace XplaneAirportParser.Data
 {
-    class Runway
+    public class Runway
     {
         public enum SurfaceTypes
         {
