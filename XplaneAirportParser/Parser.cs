@@ -32,82 +32,80 @@ namespace XplaneAirportParser
 
 				string[] segments = line.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
 
+                switch (segments[0])
+                {
+                    case AIRPORT_PREFIX:
+                        if (CurrentAiport.isFilled()) //If the airport is done handle it
+                        {
+                            HandleAirport(CurrentAiport);
+                        }
+                        CurrentAiport = new Airport(); //Create a new airport
+                        CurrentAiport.ICAO = segments[4]; //Set the airports ICAO
+                        CurrentAiport.elevation = int.Parse(segments[1]);
 
-				if (segments[0] == AIRPORT_PREFIX) //If the prefix is a new airport prefix
-				{
+                        //Processes the name of the airport
+                        for (int i = 0; i < segments.Length; i++)
+                        {
+                            if (i == 5)
+                            {
+                                CurrentAiport.AirportName = segments[5];
+                            }
+                            else
+                            {
+                                CurrentAiport.AirportName += " " + segments[i];
+                            }
+                        }
+                        break;
 
-					if (CurrentAiport.isFilled()) //If the airport is done handle it
-					{
-						HandleAirport(CurrentAiport);
-					}
-					CurrentAiport = new Airport(); //Create a new airport
-					CurrentAiport.ICAO = segments[4]; //Set the airports ICAO
-					CurrentAiport.elevation = int.Parse(segments[1]);
+                    case RUNWAY_PREFIX:
+                        //9, 10
+                        if (!CurrentAiport.hasProperLatLon)
+                        {
+                            CurrentAiport.latitude = float.Parse(segments[9]);
+                            CurrentAiport.longitude = float.Parse(segments[10]);
+                        }
+                        var coord1 = new GeoCoordinate(double.Parse(segments[9]), double.Parse(segments[10]));
+                        var coord2 = new GeoCoordinate(double.Parse(segments[18]), double.Parse(segments[19]));
 
-					//Processes the name of the airport
-					for (int i = 0; i < segments.Length; i++)
-					{
-						if (i == 5)
-						{
-							CurrentAiport.AirportName = segments[5];
-						}
-						else
-						{
-							CurrentAiport.AirportName += " " + segments[i];
-						}
-					}
-				}
-				else if (segments[0] == RUNWAY_PREFIX)
-				{
-					//9, 10
-					if (!CurrentAiport.hasProperLatLon)
-					{
-						CurrentAiport.latitude = float.Parse(segments[9]);
-						CurrentAiport.longitude = float.Parse(segments[10]);
-					}
-					var coord1 = new GeoCoordinate(double.Parse(segments[9]), double.Parse(segments[10]));
-					var coord2 = new GeoCoordinate(double.Parse(segments[18]), double.Parse(segments[19]));
+                        float runwayLength = ((float)coord1.GetDistanceTo(coord2) * 3.28084f); //3.28084f is the meters to feet conversion!
 
-					float runwayLength = ((float)coord1.GetDistanceTo(coord2) * 3.28084f); //3.28084f is the meters to feet conversion!
+                        //Add runway to airport runways
+                        CurrentAiport.runways.Add(new Runway(float.Parse(segments[9]), float.Parse(segments[10]), float.Parse(segments[18]), float.Parse(segments[19]), runwayLength, "NYI", (Runway.SurfaceTypes)int.Parse(segments[2])));
+                        break;
 
-                    //Add runway to airport runways
-                    CurrentAiport.runways.Add(new Runway(float.Parse(segments[9]), float.Parse(segments[10]), float.Parse(segments[18]), float.Parse(segments[19]), runwayLength, "NYI", (Runway.SurfaceTypes)int.Parse(segments[2])));
+                    case VIEWPORT_PREFIX:
+                        CurrentAiport.latitude = float.Parse(segments[1]);
+                        CurrentAiport.longitude = float.Parse(segments[2]);
+                        CurrentAiport.hasProperLatLon = true;
+                        break;
 
-
+                    case METADATA_PREFIX:
+                        if (segments[1] == "city")
+                        {
+                            try
+                            {
+                                CurrentAiport.city = segments[2];
+                                for (int i = 3; i < segments.Length; i++)
+                                {
+                                    CurrentAiport.city += " " + segments[i];
+                                }
+                            }
+                            catch { }
+                        }
+                        if (segments[1] == "country")
+                        {
+                            try
+                            {
+                                CurrentAiport.country = segments[2];
+                                for (int i = 3; i < segments.Length; i++)
+                                {
+                                    CurrentAiport.country += " " + segments[i];
+                                }
+                            }
+                            catch { }
+                        }
+                        break;
                 }
-				else if (segments[0] == VIEWPORT_PREFIX)
-				{
-					CurrentAiport.latitude = float.Parse(segments[1]);
-					CurrentAiport.longitude = float.Parse(segments[2]);
-					CurrentAiport.hasProperLatLon = true;
-				}
-				else if (segments[0] == METADATA_PREFIX)
-				{
-					if (segments[1] == "city")
-					{
-						try
-						{
-							CurrentAiport.city = segments[2];
-							for (int i = 3; i < segments.Length; i++)
-							{
-								CurrentAiport.city += " " + segments[i];
-							}
-						}
-						catch { }
-					}
-					if (segments[1] == "country")
-					{
-						try
-						{
-							CurrentAiport.country = segments[2];
-							for (int i = 3; i < segments.Length; i++)
-							{
-								CurrentAiport.country += " " + segments[i];
-							}
-						}
-						catch { }
-					}
-				}
 			}
 		}
 
@@ -115,7 +113,7 @@ namespace XplaneAirportParser
 		/// Gets called whenever an airport is parsed, but your stuff you want to use the airport stuff with (Like a db insert Query!)
 		/// </summary>
 		/// <param name="airport">Parsed Airport</param>
-		public void HandleAirport(Airport airport)
+		public virtual void HandleAirport(Airport airport)
 		{
 			Console.WriteLine(airport);
             foreach (Runway runway in airport.runways)
